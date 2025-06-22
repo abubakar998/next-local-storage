@@ -5,11 +5,10 @@ import { useRouter } from 'next/navigation'
 export default function Page() {
     const router = useRouter()
     const posts = JSON.parse(localStorage.getItem("posts"))
-    console.log(posts)
 
     const editPost = (e, post) => {
         e.preventDefault()
-        router.push("/edit-post", {query : post});
+        router.push(`/edit-post/${post.uniqueCode}`);
     }
 
     const deletePost = (e, uniqueCode) => {
@@ -27,19 +26,21 @@ export default function Page() {
     }
 
     return (
-        <> 
-            <h1> This is Home</h1>
+        <div className=''> 
+        <div className=''> 
+            <div className='h1'> This is Home</div>
             {
                 posts && posts.map(post => 
                     <div className="my-2">
-                        <h2> {post?.title} </h2>
                         <h4> {post?.uniqueCode} </h4>
-                        <p> {post?.content} </p>
-                        <button className="mt-2" onClick={(e) => editPost(e, post)}> Edit Post </button>
-                        <button className="mt-2" onClick={(e) => deletePost(e, post.uniqueCode)}> Delete Post </button>
+                        <h2> Title: {post?.title} </h2>
+                        <p> Content: {post?.content} </p>
+                        <button className="mt-2 button" onClick={(e) => editPost(e, post)}> Edit Post </button>
+                        <button className="mt-2 button" onClick={(e) => deletePost(e, post.uniqueCode)}> Delete Post </button>
                     </div>
                 )
             }
-        </>
+        </div>
+        </div>
     )
 }

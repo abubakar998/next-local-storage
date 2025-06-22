@@ -1,32 +1,37 @@
 "use client"; // This is a client component 👈🏽
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from 'next/navigation'
 
-export default function AddPost() {
+export default function EditPost({ params }) {
     const [formData, setFormData] = useState({})
     const router = useRouter()
+    console.log('params', params)
 
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name] : e.target.value})
     } 
 
-    const addPost = (e) => {
+    useEffect(() => {
+        let posts = JSON.parse(localStorage.getItem("posts"));
+        if (posts) {
+            let foundPost = posts.find(x => x.uniqueCode == params.uniqueCode);
+            if (foundPost) {
+                setFormData(foundPost);
+            } else {
+                console.error("Post not found");
+            }
+        } else {
+            console.error("No posts available");
+        }
+      }, []);
+
+    const editPost = (e) => {
         e.preventDefault()
         let posts = JSON.parse(localStorage.getItem("posts"));
 
-        if(posts) {
-            posts.forEach((post, index) => {
-                posts[index].uniqueCode = `post${index+1}`;
-            })
-            posts.unshift({...formData, uniqueCode : 'post0'})
-        } else {
-            posts = [{...formData, uniqueCode : 'post0'}]
-        }
-
-        if(posts.length > 5){
-            posts.pop()
-        }
-
+        let foundIndex = posts.findIndex(x => x.id == formData.id);
+        posts[foundIndex] = formData;
+        
         localStorage.setItem("posts", JSON.stringify(posts));
         router.push("/");
     }
@@ -54,7 +59,7 @@ export default function AddPost() {
                 />
             </div>
 
-            <button className="px-10 py-5 m-2 button" onClick={(e) => addPost(e)}> Submit </button>
+            <button className="px-10 py-5 m-2 button" onClick={(e) => editPost(e)}> Submit </button>
         </>
     )
 }

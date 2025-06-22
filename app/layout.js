@@ -4,8 +4,8 @@ import './global.css'
 export default function RootLayout({ children }) {
     return (
       <html lang="en">
-        <body>
-            <ul>
+        <body className='container'>
+            <ul className="nav-links">
                 <li>
                     <Link href="/">Home</Link>
                 </li>
